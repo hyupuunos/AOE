@@ -1,118 +1,115 @@
-;=========================== search 1 villager
+;=========================== search for 1 villager
 (defrule
 	(up-compare-flag fl-switch2 != 4)
 	(game-time > 30)
 	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
 	(building-type-count-total town-center >= 1)
 =>
-    (up-full-reset-search)
-    (up-filter-exclude -1 actionid-build orderid-build -1)
-    (up-find-local c: villager-class c: 15)
-    (up-clean-search search-local object-data-distance search-order-desc)
+	(up-full-reset-search)
+	(up-filter-exclude -1 actionid-build orderid-build -1)
+	(up-find-local c: villager-class c: 15)
+	(up-clean-search search-local object-data-distance search-order-desc)
 	(up-remove-objects search-local object-data-target == building-class)
 	(up-remove-objects search-local object-data-action == actionid-enter)
 	(up-remove-objects search-local object-data-order == orderid-enter)
-    (up-remove-objects search-local object-data-index != 0)
+	(up-remove-objects search-local object-data-id g:== gl-unit-id)
+	(up-remove-objects search-local object-data-index != 0)
 )
 
-;=========================== starting point, 
-
+;=========================== starting point
 (defrule
-    (up-compare-flag fl-switch2 != 4)
+	(up-compare-flag fl-switch2 != 4)
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
-    (up-set-target-object search-local c: 0)
+	(building-type-count-total town-center >= 1)
+	(up-set-target-object search-local c: 0)
 =>
-    (up-create-group 0 1 c: 0)
-    (up-get-object-data object-data-id gl-unit-id)
-    (up-get-point position-object gl-dest-x)
-    (up-get-point position-self gl-point2-x)
-    (up-lerp-tiles gl-point2-x gl-dest-x c: 12)
-    (up-bound-point gl-dest-x gl-point2-x)
+	(up-create-group 0 1 c: 0)
+	(up-get-object-data object-data-id gl-unit-id)
+	(up-get-point position-object gl-dest-x)
+	(up-get-point position-self gl-point2-x)
+	(up-lerp-tiles gl-point2-x gl-dest-x c: 12)
+	(up-bound-point gl-dest-x gl-point2-x)
 	(chat-to-all "start")
 )
 	
 (defrule
 	(up-compare-flag fl-switch2 != 4)
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
+	(building-type-count-total town-center >= 1)
 	(up-group-size c: 0 >= 1)
 	(up-set-target-by-id g: gl-unit-id)
 	(up-path-distance gl-dest-x 0 != 65535)
 =>
 	(up-set-group search-local c: 0)
-    (up-target-point gl-dest-x action-move -1 -1)
-    (set-goal gl-step 121)
-    (up-modify-flag fl-switch2 c:+ 4)
-    (up-send-flare gl-dest-x)
+	(up-target-point gl-dest-x action-move -1 -1)
+	(set-goal gl-step 121)
+	(up-modify-flag fl-switch2 c:+ 4)
+	(up-send-flare gl-dest-x)
 )
 
 ;=========================== Force Keep Moving
 (defrule
-    (up-compare-flag fl-switch2 == 4)
+	(up-compare-flag fl-switch2 == 4)
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
-    (up-group-size c: 0 >= 1)
+	(building-type-count-total town-center >= 1)
+	(up-group-size c: 0 >= 1)
 	(up-set-target-by-id g: gl-unit-id)
 	(up-path-distance gl-dest-x 0 != 65535)
-    (up-path-distance gl-dest-x 0 > 1)
-    (up-compare-goal gl-step > 0)
+	(up-path-distance gl-dest-x 0 > 1)
+	(up-compare-goal gl-step > 0)
 =>
-    (up-set-group search-local c: 0)
-    (up-target-point gl-dest-x action-move -1 -1)
+	(up-set-group search-local c: 0)
+	(up-target-point gl-dest-x action-move -1 -1)
 ;	(up-chat-data-to-all "dest-x== %d" g: gl-dest-x)
 )
 
 ;=========================== keep Update destination dest-x (Turn right 50 times)
 (defrule
-    (up-compare-flag fl-switch2 == 4)
+	(up-compare-flag fl-switch2 == 4)
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
-    (up-group-size c: 0 >= 1)
+	(building-type-count-total town-center >= 1)
+	(up-group-size c: 0 >= 1)
 	(up-set-target-by-id g: gl-unit-id)
-    (up-path-distance gl-dest-x 0 <= 2)
-    (up-compare-goal gl-step > 0)
+	(up-path-distance gl-dest-x 0 <= 2)
+	(up-compare-goal gl-step > 0)
 =>
-    (up-get-point position-self gl-point2-x)
-    (up-cross-tiles gl-dest-x gl-point2-x c: 10)
-    (up-bound-point gl-dest-x gl-dest-x)
+	(up-get-point position-self gl-point2-x)
+	(up-cross-tiles gl-dest-x gl-point2-x c: 10)
+	(up-bound-point gl-dest-x gl-dest-x)
 	(up-modify-goal gl-step c:- 2)
 	(chat-to-all "ssssss")
 	(up-send-flare gl-dest-x)
 )
 
-
-
-; =========================== Deviation correction
-
-;-----------Unreachable，reset dest-x
+; =========================== Deviation correction 
+;-----------Unreachable，reset dest-x 
 
 (defrule
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
+	(building-type-count-total town-center >= 1)
 	(up-group-size c: 0 >= 1)
 	(up-set-target-by-id g: gl-unit-id)
 	(up-path-distance gl-dest-x 0 == 65535)
@@ -129,16 +126,14 @@
 	(chat-to-all "65535")
 )
 
-
 ; ----------Out of range, pull back
-
 (defrule
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
+	(building-type-count-total town-center >= 1)
 	(up-group-size c: 0 >= 1)
 =>
 	(up-get-point position-self gl-point2-x)
@@ -146,11 +141,11 @@
 
 (defrule
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
+	(building-type-count-total town-center >= 1)
 	(up-group-size c: 0 >= 1)
 	(up-point-distance gl-dest-x gl-point2-x > 30)
 =>
@@ -170,11 +165,11 @@
 ; --------------Dismantle abnormal unit, reset group
 (defrule
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
+	(building-type-count-total town-center >= 1)
 	(up-group-size c: 0 >= 1)
 	(up-set-target-by-id g: gl-unit-id)
 	(or (and (up-object-data object-data-hitpoints < 20)
@@ -185,14 +180,14 @@
 	(chat-to-all "reset----reset")
 )
 
-; ---------------Dismantle the stationary units and let them garrison to reset the task
+;解散静止单位,让其驻扎重置任务	
 (defrule
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
+	(building-type-count-total town-center >= 1)
 	(up-group-size c: 0 >= 1)
 	(up-set-target-by-id g: gl-unit-id)
 	(timer-triggered ten-sec)
@@ -203,11 +198,11 @@
 
 (defrule
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
+	(building-type-count-total town-center >= 1)
 	(up-group-size c: 0 >= 1)
 	(up-set-target-by-id g: gl-unit-id)
 	(timer-triggered unit-timer)
@@ -218,11 +213,11 @@
 
 (defrule
 	(game-time > 30)
-    (game-time < 420)
+	(game-time < 420)
 	(or (not (resource-found food))
-		     (or (up-compare-goal gl-score-wood-kingdom <= 25)
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
 				 (up-object-type-count-total c: scout-unit <= 0)))
-    (building-type-count-total town-center >= 1)
+	(building-type-count-total town-center >= 1)
 	(up-group-size c: 0 >= 1)
 	(up-set-target-by-id g: gl-unit-id)
 	(up-compare-goal gl-unit-x g:== gl-point1-x)
@@ -236,8 +231,8 @@
 	(up-add-object-by-id search-local g: gl-unit-id)
 	(up-remove-objects search-local object-data-id g:!= gl-unit-id)
 	(set-strategic-number player-number my-player-number)
-	(up-find-remote c: 2701 c: 6)
-	(up-find-remote c: tower-class c: 6)
+;	(up-find-remote c: 2701 c: 6)
+;	(up-find-remote c: tower-class c: 6)
 	(up-find-remote c: town-center c: 3)
 	(up-clean-search search-remote object-data-distance search-order-asc)
 	(up-remove-objects search-remote object-data-index != 0)
@@ -245,17 +240,16 @@
 	(chat-to-all "reset---static---to---garrison")
 )
 
-
-; ----------------Opening restructuring	(Equal to returning to the first rule)
+; ----------------Opening restructuring (Equal to returning to the first rule)
 (defrule
 	(game-time > 30)
-  (game-time < 420)
-  (or (not (resource-found food))
-		  (or (up-compare-goal gl-score-wood-kingdom <= 25)
-				  (up-object-type-count-total c: scout-unit <= 0)))
-  (building-type-count-total town-center >= 1)
+	(game-time < 420)
+	(or (not (resource-found food))
+			 (or (up-compare-goal gl-score-wood-kingdom <= 30)
+				 (up-object-type-count-total c: scout-unit <= 0)))
+	(building-type-count-total town-center >= 1)
 	(or (up-group-size c: 0 <= 0)
-		  (up-compare-goal gl-step <= 0))
+		(up-compare-goal gl-step <= 0))
 =>
 	(up-modify-flag fl-switch2 c:- 4)
 )
