@@ -180,7 +180,7 @@
 	(chat-to-all "reset----reset")
 )
 
-;解散静止单位,让其驻扎重置任务	
+; Dismantle the stationary units ，and let them garrison to reset the task	
 (defrule
 	(game-time > 30)
 	(game-time < 420)
